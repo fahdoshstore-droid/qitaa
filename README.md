@@ -150,13 +150,65 @@ qitaa/
 - **Headless mode configurable** — `headless: false` opens a visible browser so the operator can review the cart and pay manually.
 - **Parallel store search** — all three stores (RockAuto, eBay, GMPartsGiant) are searched in parallel per part, and all parts are searched in parallel.
 
-## Regional Agents
+## Ecosystem Integration
 
+QITAA is part of a larger sourcing ecosystem. It is designed to connect with:
+
+### WhatsApp Bot (Customer Interface)
+- Customer sends car model + part name via WhatsApp
+- Bot extracts part requirements and calls QITAA API (`/api/parts/source`)
+- QITAA returns landed cost + Arabic quote
+- Bot sends quote back to customer
+- On confirmation, QITAA prepares the cart (`/api/parts/add-to-cart`)
+- Operator pays, parts ship to Saudi Arabia
+
+```
+Customer → WhatsApp → QITAA API → RockAuto Cart → Payment → Delivery
+                ↑                              ↓
+           Arabic quote ← Landed cost calc ← Search
+```
+
+### RockAuto MCP Server
+- QITAA integrates with [rockauto-mcp](https://github.com/BrianLeishman/rockauto-mcp) for fast part number search
+- MCP tools (`search_part_number`, `get_parts`, `browse_category`) replace HTTP scraping for search-only queries
+- Puppeteer cart automation still used for Add to Cart (MCP is read-only)
+
+### Regional Agents (Planned)
 Currently only the **USA agent** is implemented. The parts orchestrator (`parts-agent.js`) has stubs for:
 - 🇬🇧 UK/Europe agent — TODO
 - 🇨🇳 Asia/China agent — TODO
 
-Contributions for additional regions are welcome!
+Each regional agent will handle its own stores, shipping routes, and customs calculations.
+
+### Data Flow
+```
+┌─────────────┐     ┌──────────────┐     ┌───────────────┐
+│  Customer   │────▶│  WhatsApp Bot │────▶│  QITAA API    │
+│  (Saudi)    │◀────│  (Arabic)     │◀────│  (Express)    │
+└─────────────┘     └──────────────┘     └───────┬───────┘
+                                                │
+                                    ┌───────────┼───────────┐
+                                    ▼           ▼           ▼
+                              ┌──────────┐ ┌──────────┐ ┌──────────┐
+                              │ RockAuto │ │  eBay    │ │GM Parts  │
+                              │ (Puppeteer│ │ (API)   │ │(Cloudflare│
+                              │  +MCP)   │ │         │ │ blocked) │
+                              └──────────┘ └──────────┘ └──────────┘
+                                    │
+                                    ▼
+                              ┌──────────────────────┐
+                              │  Landed Cost Engine   │
+                              │  (SAR + customs + VAT)│
+                              └──────────────────────┘
+                                    │
+                                    ▼
+                              ┌──────────────────────┐
+                              │  Arabic WhatsApp Quote│
+                              │  (Ready to send)      │
+                              └──────────────────────┘
+```
+
+Contributions for additional regions and integrations are welcome!
 
 ## Contributing
 
