@@ -1,0 +1,21 @@
+{
+  "vehicle": "2007 Hummer H3 — 3.7L L5",
+  "rockauto": [
+    { "partNumber": "20832044", "brand": "GM Genuine", "description": "Parking Brake Lever", "qty": 1 },
+    { "partNumber": "PF61E", "brand": "ACDelco", "description": "Oil Filter", "qty": 1 },
+    { "partNumber": "19540439", "brand": "GM Genuine", "description": "Power Steering Pressure Hose", "qty": 1 },
+    { "partNumber": "32110", "brand": "Dorman", "description": "Exhaust Manifold Stud & Nut Kit", "qty": 2 },
+    { "partNumber": "896341", "brand": "Elring", "description": "Leak Sealant", "qty": 1 },
+    { "partNumber": "41103", "brand": "ACDelco", "description": "Spark Plug", "qty": 5 },
+    { "partNumber": "11562588", "brand": "GM Genuine", "description": "Oil Drain Plug", "qty": 1 }
+  ],
+  "gmpartsgiant": [
+    { "partNumber": "19301783", "brand": "GM", "description": "Steering Gear Bushing", "qty": 1 },
+    { "partNumber": "89018220", "brand": "GM", "description": "Camshaft Cover Gasket Kit", "qty": 1 },
+    { "partNumber": "12575463", "brand": "GM", "description": "Throttle Body Gasket", "qty": 1 },
+    { "partNumber": "24504031", "brand": "GM", "description": "Oil Level Indicator O-Ring", "qty": 1 },
+    { "partNumber": "12611636", "brand": "GM", "description": "Serpentine Belt", "qty": 1 },
+    { "partNumber": "15105884", "brand": "GM", "description": "Exhaust Manifold Pipe Seal", "qty": 1 },
+    { "partNumber": "11589040", "brand": "GM", "description": "Torque Converter Bolt", "qty": 3 }
+  ]
+}

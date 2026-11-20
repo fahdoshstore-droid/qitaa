@@ -1,0 +1,44 @@
+{
+  "name": "qitaa",
+  "version": "1.0.0",
+  "description": "QITAA — Open-source car parts sourcing agent. Searches US auto parts stores (RockAuto, eBay, GMPartsGiant), calculates landed cost with Saudi customs/VAT, and formats WhatsApp quotes in Arabic.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qitaa/qitaa.git"
+  },
+  "keywords": [
+    "car-parts",
+    "sourcing",
+    "rockauto",
+    "automotive",
+    "saudi-arabia",
+    "landed-cost",
+    "puppeteer",
+    "whatsapp"
+  ],
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "test:usa": "node server/agents/test-usa-agent.js",
+    "test:cart": "node server/agents/test-add-to-cart.js",
+    "test:full-cart": "node server/agents/test-full-cart.js",
+    "test:complete-cart": "node server/agents/test-complete-cart.js",
+    "open:rockauto": "node server/agents/open-rockauto.js",
+    "open:gmpartsgiant": "node server/agents/open-gmpartsgiant.js"
+  },
+  "dependencies": {
+    "axios": "^1.21.1",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "puppeteer": "^25.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
