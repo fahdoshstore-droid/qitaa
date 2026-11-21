@@ -98,4 +98,67 @@ router.get('/agents', (req, res) => {
   res.json(status);
 });
 
+// ── Stats (for Theeb Capital dashboard) ─────────────────────────
+/**
+ * GET /api/stats
+ * Returns aggregate QITAA stats (no customer data, just numbers).
+ * Used by Theeb Capital portfolio dashboard — read-only, no auth.
+ */
+router.get('/stats', async (req, res) => {
+  try {
+    const supabaseUrl = process.env.QITAA_SUPABASE_URL || 'https://ujjmhqpyehymaavkawiv.supabase.co';
+    const supabaseKey = process.env.QITAA_SUPABASE_ANON_KEY || process.env.QITAA_SUPABASE_KEY;
+    if (!supabaseKey) {
+      return res.json({
+        total_orders: 0,
+        total_usd: 0,
+        total_sar: 0,
+        by_status: {},
+        note: 'Supabase key not configured',
+      });
+    }
+
+    const axios = require('axios');
+    const headers = {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`,
+    };
+
+    // Fetch all orders (just status + amounts, no customer data)
+    const ordersResp = await axios.get(
+      `${supabaseUrl}/rest/v1/qitaa_orders?select=status,total_usd,total_sar`,
+      { headers, timeout: 10000 }
+    );
+    const orders = ordersResp.data || [];
+
+    const totalUsd = orders.reduce((sum, o) => sum + (parseFloat(o.total_usd) || 0), 0);
+    const totalSar = orders.reduce((sum, o) => sum + (parseFloat(o.total_sar) || 0), 0);
+    const byStatus = {};
+    for (const o of orders) {
+      const s = o.status || 'unknown';
+      byStatus[s] = (byStatus[s] || 0) + 1;
+    }
+
+    // Count customers
+    let customerCount = 0;
+    try {
+      const custResp = await axios.get(
+        `${supabaseUrl}/rest/v1/qitaa_customers?select=id`,
+        { headers, timeout: 10000 }
+      );
+      customerCount = (custResp.data || []).length;
+    } catch (_) {}
+
+    res.json({
+      total_orders: orders.length,
+      total_usd: Math.round(totalUsd * 100) / 100,
+      total_sar: Math.round(totalSar * 100) / 100,
+      total_customers: customerCount,
+      by_status: byStatus,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
