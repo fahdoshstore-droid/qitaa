@@ -12,7 +12,11 @@ const cors = require('cors');
 const agents = require('./agents');
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
+    : true, // allow all in dev
+}));
 app.use(express.json());
 
 // ── Parts Sourcing API ─────────────────────────────────────────
